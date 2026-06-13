@@ -1,26 +1,27 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  Kids Planet School theme.
+  With Tailwind v4 we define our design tokens here in CSS.
+  Anything under @theme becomes a usable utility class, e.g.
+  --color-navy  ->  text-navy / bg-navy
+  --font-display -> font-display
+*/
+@theme {
+  /* Brand colors (from the Little Rainbow template) */
+  --color-cream: #fdf6ec; /* page background */
+  --color-navy: #1f2a5e; /* headings + primary text */
+  --color-peach: #f6c9a4; /* soft accent panels */
+  --color-coral: #e8732c; /* highlight / call-to-action */
+  --color-skyblue: #3e6fd0; /* secondary accent */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Fonts (loaded in layout.tsx) */
+  --font-display: var(--font-fraunces); /* big rounded headings */
+  --font-sans: var(--font-nunito); /* body text */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-navy);
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
