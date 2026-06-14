@@ -1,25 +1,27 @@
 import type { Metadata } from "next";
-import { Fraunces, Nunito } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 
-// Display font for big playful headings
+// Elegant display serif for big headings
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
   display: "swap",
 });
 
-// Body font for readable text
-const nunito = Nunito({
-  variable: "--font-nunito",
+// Clean, modern sans for body text and UI
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Kids Planet School",
+  title: "Kids Planet School — Play. Learn. Grow.",
   description:
-    "Kids Planet School — a warm, nurturing place for children to play, learn, and grow.",
+    "Kids Planet School — a modern, nurturing school where children from playgroup to Class 5 explore, imagine, and grow.",
 };
 
 export default function RootLayout({
@@ -29,8 +31,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${fraunces.variable} ${nunito.variable} antialiased`}>
-        {children}
+      <body className={`${fraunces.variable} ${inter.variable} antialiased`}>
+        <Navbar />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

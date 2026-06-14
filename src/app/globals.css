@@ -1,27 +1,72 @@
 @import "tailwindcss";
 
 /*
-  Kids Planet School theme.
-  With Tailwind v4 we define our design tokens here in CSS.
-  Anything under @theme becomes a usable utility class, e.g.
-  --color-navy  ->  text-navy / bg-navy
-  --font-display -> font-display
+  Kids Planet School — design system.
+  Light theme on a soft grey canvas (#EEEEEE) with a green brand palette.
+  Tokens under @theme become Tailwind utility classes automatically,
+  e.g. --color-deep -> text-deep / bg-deep.
 */
 @theme {
-  /* Brand colors (from the Little Rainbow template) */
-  --color-cream: #fdf6ec; /* page background */
-  --color-navy: #1f2a5e; /* headings + primary text */
-  --color-peach: #f6c9a4; /* soft accent panels */
-  --color-coral: #e8732c; /* highlight / call-to-action */
-  --color-skyblue: #3e6fd0; /* secondary accent */
+  /* Surfaces */
+  --color-canvas: #eeeeee; /* page background */
+  --color-surface: #ffffff; /* cards / panels */
+
+  /* Brand greens (from the supplied palette) */
+  --color-deep: #1f6f5f; /* deep green — primary, footer, buttons */
+  --color-teal: #2fa084; /* teal — accents, gradients */
+  --color-mint: #6fcf97; /* fresh green — highlights, hovers */
+
+  /* Text */
+  --color-ink: #133029; /* near-black green for headings/body */
 
   /* Fonts (loaded in layout.tsx) */
-  --font-display: var(--font-fraunces); /* big rounded headings */
-  --font-sans: var(--font-nunito); /* body text */
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-inter);
+
+  /* Motion easing used across the site */
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--color-cream);
-  color: var(--color-navy);
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
   font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Branded text selection */
+::selection {
+  background-color: var(--color-mint);
+  color: var(--color-deep);
+}
+
+/* Slim, on-brand scrollbar (WebKit browsers) */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-teal);
+  border-radius: 999px;
+  border: 2px solid var(--color-canvas);
+}
+
+/* Respect users who prefer less motion (accessibility) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
 }

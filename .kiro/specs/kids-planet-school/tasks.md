@@ -7,24 +7,26 @@ Work top to bottom. Each phase leaves you with something working.
 - [x] 1.2 Set up base theme (cream/navy/peach colors, Fraunces + Nunito fonts)
       _shadcn/ui deferred to Phase 2, added when we build forms/tables_
 - [ ] 1.3 Create a Supabase project and add keys to `.env.local`
-- [ ] 1.4 Deploy a starter page to Vercel to confirm the full pipeline works
+- [ ] 1.4 Deploy to Vercel — _deferred; building locally first, repo is pushed to GitHub and ready to connect later_
   - _Requirements: Non-functional (cost, responsive)_
 
 ## Phase 2 — Public website (static content first)
-- [ ] 2.1 Build shared layout: top announcement bar, nav, footer
-- [ ] 2.2 Home page (hero, highlights, programs section)
-- [ ] 2.3 About page
-- [ ] 2.4 Events page (content seeded in code)
-- [ ] 2.5 Gallery page (image grid, content seeded in code)
-- [ ] 2.6 Contact page (address, phone, email, embedded map)
-- [ ] 2.7 Make all pages responsive + optimize images
+- [x] 2.1 Build shared layout: top announcement bar, nav, footer
+- [x] 2.2 Home page (hero, programs Pre-Primary + Primary 1–5, approach, CTA)
+- [x] 2.3 About page
+- [x] 2.4 Events page (content seeded in code)
+- [x] 2.5 Gallery page (image grid, content seeded in code)
+- [x] 2.6 Contact page (address, phone, email, embedded map)
+- [x] 2.7 Make all pages responsive + optimize images
   - _Requirements: 1, 6_
 
 ## Phase 3 — Admissions enquiry form
-- [ ] 3.1 Create `enquiries` table in Supabase
-- [ ] 3.2 Build Apply Now form with validation
-- [ ] 3.3 Save submissions to the database + success/error states
-  - _Requirements: 2_
+- [x] 3.1 Create `enquiries` table in Supabase (supabase/sql/01_enquiries.sql)
+- [x] 3.2 Build Apply Now form with validation
+- [x] 3.3 Save submissions to the database + success/error states
+  - _Requirements: 2 — verified: test row inserted successfully_
+  - _Note: Node 20 needs a `ws` WebSocket polyfill (src/lib/supabase/server.ts);
+    can be removed after upgrading to Node 22+._
 
 ## Phase 4 — Authentication and roles
 - [ ] 4.1 Create `profiles` table + role field; enable RLS
