@@ -45,7 +45,7 @@ export function PortalShell({
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-5 py-10 sm:px-8">{children}</main>
+      <main id="main-content" className="mx-auto max-w-6xl px-5 py-10 sm:px-8">{children}</main>
     </div>
   );
 }

@@ -55,15 +55,19 @@ Work top to bottom. Each phase leaves you with something working.
   - _Pending user step: run 04_fees.sql, add SUPABASE_SERVICE_ROLE_KEY to .env.local, restart dev._
 
 ## Phase 7 — Admin dashboard
-- [ ] 7.1 Dashboard layout with sections
-- [ ] 7.2 Manage students and teachers (add/view)
-- [ ] 7.3 View admission enquiries
+- [x] 7.1 Dashboard layout with sections (all cards now link to live pages)
+- [x] 7.2 Manage students and teachers (create accounts, reassign class, delete)
+- [x] 7.3 View admission enquiries (mark contacted, delete)
   - _Requirements: 7_
+  - _Admin creates accounts via Supabase admin API (service-role); trigger builds profile/student rows._
+  - _No new SQL or env needed — uses tables/keys from earlier phases._
 
 ## Phase 8 — Polish
-- [ ] 8.1 Final responsive pass (mobile/tablet/desktop)
-- [ ] 8.2 Performance optimization (images, fonts, lazy loading)
-- [ ] 8.3 Accessibility check
+- [x] 8.1 Final responsive pass (mobile/tablet/desktop)
+- [x] 8.2 Performance optimization (next/image, next/font, static where possible)
+- [x] 8.3 Accessibility (focus-visible rings, skip-to-content, aria labels, reduced motion)
+- [x] 8.4 SEO: rich metadata + Open Graph, sitemap.xml, robots.txt
+- [x] 8.5 Custom 404 page + loading states
   - _Requirements: Non-functional_
 
 ## Phase 9 — Future (not now)

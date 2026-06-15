@@ -70,3 +70,27 @@ body {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* Visible keyboard focus ring (accessibility) */
+:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Skip-to-content link: hidden until focused via keyboard */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--color-deep);
+  color: var(--color-surface);
+  padding: 0.6rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0 0 0.75rem 0;
+}
+.skip-link:focus {
+  left: 0;
+}
