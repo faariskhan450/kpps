@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
+import { ChromeGate } from "@/components/chrome-gate";
 
 // Elegant display serif for big headings
 const fraunces = Fraunces({
@@ -32,9 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${fraunces.variable} ${inter.variable} antialiased`}>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <ChromeGate>{children}</ChromeGate>
       </body>
     </html>
   );

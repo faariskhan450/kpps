@@ -1,13 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import WebSocketImpl from "ws";
-
-// Node.js < 22 has no built-in WebSocket, which the Supabase client expects.
-// Provide one so the client can be constructed on the server.
-// (This workaround can be removed once Node is upgraded to v22+.)
-if (typeof (globalThis as { WebSocket?: unknown }).WebSocket === "undefined") {
-  (globalThis as { WebSocket?: unknown }).WebSocket = WebSocketImpl;
-}
 
 /**
  * Supabase client for code that runs on the SERVER

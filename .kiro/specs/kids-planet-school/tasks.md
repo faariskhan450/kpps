@@ -29,22 +29,30 @@ Work top to bottom. Each phase leaves you with something working.
     can be removed after upgrading to Node 22+._
 
 ## Phase 4 — Authentication and roles
-- [ ] 4.1 Create `profiles` table + role field; enable RLS
-- [ ] 4.2 Build login page with Supabase Auth
-- [ ] 4.3 Add middleware: protect routes, redirect by role, logout
+- [x] 4.1 Create `profiles` table + role field; enable RLS (supabase/sql/02_profiles.sql)
+- [x] 4.2 Build login pages (teacher, student/parent, admin) + signup with Supabase Auth
+- [x] 4.3 Add middleware + portal layouts: protect routes, redirect by role, logout
   - _Requirements: 3_
+  - _Admin login reads credentials from env (ADMIN_EMAIL/ADMIN_PASSWORD); signed cookie session._
+  - _Pending user steps: run 02_profiles.sql, disable "Confirm email" in Supabase, restart dev._
 
 ## Phase 5 — Attendance
-- [ ] 5.1 Create `students` and `attendance` tables + RLS
-- [ ] 5.2 Teacher page: list class, mark/update attendance (no duplicates)
-- [ ] 5.3 Student portal: view attendance history + percentage
+- [x] 5.1 Create `students` and `attendance` tables + RLS (supabase/sql/03_attendance.sql)
+- [x] 5.2 Teacher page: list class, mark/update attendance (upsert, no duplicates)
+- [x] 5.3 Student portal: view attendance history + percentage
   - _Requirements: 4_
+  - _Class is chosen at signup (student = their class, teacher = class they teach);
+    teacher sees students whose class matches. Admin reassignment comes in Phase 7._
+  - _Pending user step: run 03_attendance.sql, then create fresh teacher + student
+    test accounts in the SAME class to test._
 
 ## Phase 6 — Fee tracking
-- [ ] 6.1 Create `fees` table + RLS (with `payment_ref` reserved for later)
-- [ ] 6.2 Admin: create and update fee records, mark paid
-- [ ] 6.3 Student portal: view fees + paid/outstanding summary
+- [x] 6.1 Create `fees` table + RLS (payment_ref reserved for Razorpay) — supabase/sql/04_fees.sql
+- [x] 6.2 Admin: create fees, mark paid/unpaid, delete (service-role client)
+- [x] 6.3 Student portal: view fees + paid/outstanding summary
   - _Requirements: 5_
+  - _Admin uses SUPABASE_SERVICE_ROLE_KEY (server-only) since admin isn't a Supabase user._
+  - _Pending user step: run 04_fees.sql, add SUPABASE_SERVICE_ROLE_KEY to .env.local, restart dev._
 
 ## Phase 7 — Admin dashboard
 - [ ] 7.1 Dashboard layout with sections

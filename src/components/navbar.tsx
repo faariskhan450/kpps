@@ -9,7 +9,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown, GraduationCap, Users } from "lucide-react";
 import { siteConfig } from "@/lib/site";
 import { Logo } from "@/components/logo";
 
@@ -17,6 +17,7 @@ export function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
 
   // Track whether the page has been scrolled a little, to switch nav styling
   useEffect(() => {
@@ -72,13 +73,58 @@ export function Navbar() {
           })}
         </ul>
 
-        {/* Desktop CTA */}
-        <Link
-          href="/admissions"
-          className="hidden rounded-full bg-deep px-5 py-2.5 font-sans text-sm font-semibold text-surface shadow-sm transition-all duration-300 hover:bg-teal hover:shadow-md md:inline-block"
-        >
-          Apply Now
-        </Link>
+        {/* Desktop right cluster: Login dropdown + Apply Now */}
+        <div className="hidden items-center gap-3 md:flex">
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setLoginOpen((v) => !v)}
+              onBlur={() => setTimeout(() => setLoginOpen(false), 150)}
+              aria-expanded={loginOpen}
+              className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 px-5 py-2.5 font-sans text-sm font-semibold text-ink transition-colors duration-300 hover:border-deep hover:text-deep"
+            >
+              Login
+              <ChevronDown
+                size={15}
+                className={`transition-transform duration-300 ${loginOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            <AnimatePresence>
+              {loginOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute right-0 mt-2 w-56 overflow-hidden rounded-2xl border border-ink/10 bg-surface p-1.5 shadow-[0_20px_50px_rgba(19,48,41,0.12)]"
+                >
+                  <Link
+                    href="/login/teacher"
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 font-sans text-sm font-medium text-ink transition-colors hover:bg-canvas"
+                  >
+                    <GraduationCap size={17} className="text-teal" />
+                    As Teacher
+                  </Link>
+                  <Link
+                    href="/login/student"
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 font-sans text-sm font-medium text-ink transition-colors hover:bg-canvas"
+                  >
+                    <Users size={17} className="text-teal" />
+                    As Student / Parent
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <Link
+            href="/admissions"
+            className="rounded-full bg-deep px-5 py-2.5 font-sans text-sm font-semibold text-surface shadow-sm transition-all duration-300 hover:bg-teal hover:shadow-md"
+          >
+            Apply Now
+          </Link>
+        </div>
 
         {/* Mobile toggle */}
         <button
@@ -128,6 +174,26 @@ export function Navbar() {
                   className="block rounded-full bg-deep px-4 py-3 text-center font-sans text-sm font-semibold text-surface"
                 >
                   Apply Now
+                </Link>
+              </li>
+              <li className="mt-2 border-t border-ink/10 pt-2">
+                <Link
+                  href="/login/teacher"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2.5 rounded-xl px-4 py-3 font-sans text-sm font-medium text-ink/70 hover:bg-canvas"
+                >
+                  <GraduationCap size={17} className="text-teal" />
+                  Login as Teacher
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/login/student"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2.5 rounded-xl px-4 py-3 font-sans text-sm font-medium text-ink/70 hover:bg-canvas"
+                >
+                  <Users size={17} className="text-teal" />
+                  Login as Student / Parent
                 </Link>
               </li>
             </ul>
