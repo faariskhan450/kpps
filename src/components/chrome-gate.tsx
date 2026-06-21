@@ -22,7 +22,8 @@ export function ChromeGate({ children }: { children: ReactNode }) {
   return (
     <>
       <Navbar />
-      <main id="main-content">{children}</main>
+      {/* pulled up so the wavy header dips reveal the page colour, not a gap */}
+      <main id="main-content" className="-mt-12">{children}</main>
       <Footer />
     </>
   );

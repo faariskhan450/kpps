@@ -1,16 +1,33 @@
 import Link from "next/link";
-import { ArrowLeft, Mail, Phone, Trash2, Check, Undo2 } from "lucide-react";
+import { ArrowLeft, Mail, Phone, Check, Undo2 } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin-client";
+import { ListControls } from "@/components/list-controls";
+import { ConfirmDeleteButton } from "@/components/confirm-delete-button";
 import { setEnquiryStatus, deleteEnquiry } from "./actions";
 
 export const metadata = { title: "Enquiries — Admin — Kids Planet School" };
 
-export default async function AdminEnquiriesPage() {
+const PAGE_SIZE = 10;
+
+export default async function AdminEnquiriesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; page?: string }>;
+}) {
+  const params = await searchParams;
+  const q = (params.q ?? "").trim();
+  const page = Math.max(1, Number(params.page) || 1);
+
   const supabase = createAdminClient();
-  const { data: enquiries } = await supabase
+  let query = supabase
     .from("enquiries")
-    .select("id, parent_name, child_name, child_age_grade, phone, email, message, status, created_at")
-    .order("created_at", { ascending: false });
+    .select("id, parent_name, child_name, child_age_grade, phone, email, message, status, created_at", { count: "exact" });
+  if (q) query = query.or(`parent_name.ilike.%${q}%,child_name.ilike.%${q}%`);
+  const { data: enquiries, count } = await query
+    .order("created_at", { ascending: false })
+    .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
+
+  const totalPages = Math.max(1, Math.ceil((count ?? 0) / PAGE_SIZE));
 
   return (
     <div>
@@ -21,21 +38,23 @@ export default async function AdminEnquiriesPage() {
         Admission enquiries
       </h1>
 
+      <div className="mt-8">
+        <ListControls basePath="/admin/enquiries" q={q} page={page} totalPages={totalPages} placeholder="Search by name..." />
+      </div>
+
       {(enquiries ?? []).length === 0 ? (
-        <div className="mt-8 rounded-3xl bg-surface p-8 font-sans text-sm text-ink/60 shadow-[0_10px_40px_rgba(19,48,41,0.05)]">
-          No enquiries yet. Submissions from the Admissions page appear here.
+        <div className="mt-6 rounded-3xl bg-surface p-8 font-sans text-sm text-ink/60 shadow-[0_10px_40px_rgba(19,48,41,0.05)]">
+          No enquiries found.
         </div>
       ) : (
-        <div className="mt-8 space-y-4">
+        <div className="mt-6 space-y-4">
           {(enquiries ?? []).map((e) => (
             <div key={e.id} className="rounded-3xl bg-surface p-6 shadow-[0_10px_40px_rgba(19,48,41,0.05)]">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <h2 className="font-display text-lg font-semibold text-ink">
                     {e.child_name}{" "}
-                    <span className="font-sans text-sm font-normal text-ink/50">
-                      · {e.child_age_grade}
-                    </span>
+                    <span className="font-sans text-sm font-normal text-ink/50">· {e.child_age_grade}</span>
                   </h2>
                   <p className="font-sans text-sm text-ink/60">Parent: {e.parent_name}</p>
                 </div>
@@ -47,19 +66,11 @@ export default async function AdminEnquiriesPage() {
               </div>
 
               <div className="mt-3 flex flex-wrap gap-4 font-sans text-sm text-ink/70">
-                <a href={`tel:${e.phone}`} className="inline-flex items-center gap-1.5 hover:text-deep">
-                  <Phone size={14} /> {e.phone}
-                </a>
-                <a href={`mailto:${e.email}`} className="inline-flex items-center gap-1.5 hover:text-deep">
-                  <Mail size={14} /> {e.email}
-                </a>
+                <a href={`tel:${e.phone}`} className="inline-flex items-center gap-1.5 hover:text-deep"><Phone size={14} /> {e.phone}</a>
+                <a href={`mailto:${e.email}`} className="inline-flex items-center gap-1.5 hover:text-deep"><Mail size={14} /> {e.email}</a>
               </div>
 
-              {e.message && (
-                <p className="mt-3 rounded-xl bg-canvas px-4 py-3 font-sans text-sm text-ink/70">
-                  {e.message}
-                </p>
-              )}
+              {e.message && <p className="mt-3 rounded-xl bg-canvas px-4 py-3 font-sans text-sm text-ink/70">{e.message}</p>}
 
               <div className="mt-4 flex items-center gap-3">
                 <form action={setEnquiryStatus}>
@@ -72,9 +83,7 @@ export default async function AdminEnquiriesPage() {
                 </form>
                 <form action={deleteEnquiry}>
                   <input type="hidden" name="id" value={e.id} />
-                  <button type="submit" aria-label="Delete enquiry" className="rounded-full p-1.5 text-ink/40 transition-colors hover:text-red-600">
-                    <Trash2 size={15} />
-                  </button>
+                  <ConfirmDeleteButton title="Delete enquiry?" message="This enquiry will be permanently removed." ariaLabel="Delete enquiry" />
                 </form>
               </div>
             </div>

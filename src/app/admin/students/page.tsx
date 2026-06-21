@@ -1,11 +1,15 @@
 import Link from "next/link";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin-client";
 import { AdminStudentForm } from "@/components/admin-student-form";
+import { ListControls } from "@/components/list-controls";
+import { ConfirmDeleteButton } from "@/components/confirm-delete-button";
 import { CLASS_OPTIONS } from "@/lib/classes";
 import { updateStudentClass, deleteStudent } from "./actions";
 
 export const metadata = { title: "Students — Admin — Kids Planet School" };
+
+const PAGE_SIZE = 10;
 
 type Row = {
   id: string;
@@ -15,12 +19,25 @@ type Row = {
   profiles: { email: string | null } | { email: string | null }[] | null;
 };
 
-export default async function AdminStudentsPage() {
+export default async function AdminStudentsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; page?: string }>;
+}) {
+  const params = await searchParams;
+  const q = (params.q ?? "").trim();
+  const page = Math.max(1, Number(params.page) || 1);
+
   const supabase = createAdminClient();
-  const { data: students } = await supabase
+  let query = supabase
     .from("students")
-    .select("id, full_name, grade, profile_id, profiles(email)")
-    .order("full_name");
+    .select("id, full_name, grade, profile_id, profiles(email)", { count: "exact" });
+  if (q) query = query.ilike("full_name", `%${q}%`);
+  const { data: students, count } = await query
+    .order("full_name")
+    .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
+
+  const totalPages = Math.max(1, Math.ceil((count ?? 0) / PAGE_SIZE));
 
   return (
     <div>
@@ -36,11 +53,15 @@ export default async function AdminStudentsPage() {
       </div>
 
       <h2 className="mt-12 font-display text-xl font-semibold text-ink">
-        All students ({(students ?? []).length})
+        All students ({count ?? 0})
       </h2>
+      <div className="mt-4">
+        <ListControls basePath="/admin/students" q={q} page={page} totalPages={totalPages} placeholder="Search by name..." />
+      </div>
+
       {(students ?? []).length === 0 ? (
         <div className="mt-4 rounded-3xl bg-surface p-8 font-sans text-sm text-ink/60 shadow-[0_10px_40px_rgba(19,48,41,0.05)]">
-          No students yet.
+          No students found.
         </div>
       ) : (
         <div className="mt-4 space-y-3">
@@ -53,7 +74,6 @@ export default async function AdminStudentsPage() {
                   <p className="font-sans text-xs text-ink/50">{prof?.email ?? "—"}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  {/* Reassign class */}
                   <form action={updateStudentClass} className="flex items-center gap-2">
                     <input type="hidden" name="student_id" value={s.id} />
                     <input type="hidden" name="profile_id" value={s.profile_id} />
@@ -65,12 +85,9 @@ export default async function AdminStudentsPage() {
                       Save
                     </button>
                   </form>
-                  {/* Delete */}
                   <form action={deleteStudent}>
                     <input type="hidden" name="profile_id" value={s.profile_id} />
-                    <button type="submit" aria-label="Delete student" className="rounded-full p-2 text-ink/40 transition-colors hover:text-red-600">
-                      <Trash2 size={15} />
-                    </button>
+                    <ConfirmDeleteButton title="Delete student?" message="Their account, attendance, and fees will be permanently removed." ariaLabel="Delete student" />
                   </form>
                 </div>
               </div>

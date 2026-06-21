@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { siteConfig } from "@/lib/site";
 import { Logo } from "@/components/logo";
+import { WaveDivider } from "@/components/wave-divider";
 
 // Small inline brand icons (lucide removed brand icons, so we draw them here)
 function FacebookIcon() {
@@ -30,13 +31,19 @@ function YoutubeIcon() {
 
 export function Footer() {
   return (
-    <footer className="mt-28 bg-deep text-surface">
-      <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
+    <footer className="relative bg-deep pt-20 text-surface">
+      {/* green wavy top edge that rises into the section above (no light gap) */}
+      <WaveDivider className="absolute inset-x-0 bottom-full h-14 text-deep sm:h-20" />
+      {/* playful doodles */}
+      <div className="pointer-events-none absolute right-[10%] top-[18%] h-10 w-10 rounded-full bg-mint/20" />
+      <div className="pointer-events-none absolute left-[8%] bottom-[16%] h-8 w-8 rounded-full border-4 border-mint/20" />
+
+      <div className="relative z-10 mx-auto max-w-6xl px-5 pb-16 sm:px-8">
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
           {/* Brand */}
           <div className="max-w-sm">
             <div className="flex items-center gap-2.5">
-              <Logo className="h-8 w-8" />
+              <Logo className="h-14 w-14" />
               <span className="font-display text-xl font-semibold">
                 {siteConfig.name}
               </span>
@@ -104,7 +111,7 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="mt-14 border-t border-surface/15 pt-6 text-center font-sans text-xs text-surface/50">
+        <p className="mt-14 pt-6 text-center font-sans text-xs text-surface/50">
           © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
         </p>
       </div>

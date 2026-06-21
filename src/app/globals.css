@@ -8,13 +8,14 @@
 */
 @theme {
   /* Surfaces */
-  --color-canvas: #eeeeee; /* page background */
+  --color-canvas: #cbeae2; /* mint page background */
   --color-surface: #ffffff; /* cards / panels */
 
-  /* Brand greens (from the supplied palette) */
-  --color-deep: #1f6f5f; /* deep green — primary, footer, buttons */
+  /* Brand greens (bottle-green forward) */
+  --color-deep: #0b4d38; /* bottle green — primary, footer, buttons */
   --color-teal: #2fa084; /* teal — accents, gradients */
   --color-mint: #6fcf97; /* fresh green — highlights, hovers */
+  --color-wash: #cbeae2; /* matches the page background for a seamless blend */
 
   /* Text */
   --color-ink: #133029; /* near-black green for headings/body */
@@ -93,4 +94,12 @@ body {
 }
 .skip-link:focus {
   left: 0;
+}
+
+/* Organic blob shapes — no straight edges (Kidzee-style) */
+.blob {
+  border-radius: 42% 58% 57% 43% / 47% 42% 58% 53%;
+}
+.blob-alt {
+  border-radius: 58% 42% 45% 55% / 55% 48% 52% 45%;
 }

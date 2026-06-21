@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ArrowLeft, Check, Undo2, Trash2 } from "lucide-react";
+import { ArrowLeft, Check, Undo2 } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin-client";
 import { AdminFeeForm } from "@/components/admin-fee-form";
+import { ConfirmDeleteButton } from "@/components/confirm-delete-button";
 import { setFeeStatus, deleteFee } from "./actions";
 
 export const metadata = { title: "Fees — Admin — Kids Planet School" };
@@ -109,9 +110,7 @@ export default async function AdminFeesPage() {
                   {/* Delete */}
                   <form action={deleteFee}>
                     <input type="hidden" name="id" value={f.id} />
-                    <button type="submit" aria-label="Delete fee" className="rounded-full p-1.5 text-ink/40 transition-colors hover:text-red-600">
-                      <Trash2 size={15} />
-                    </button>
+                    <ConfirmDeleteButton title="Delete fee?" message="This fee record will be permanently removed." ariaLabel="Delete fee" />
                   </form>
                 </div>
               </div>

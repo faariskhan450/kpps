@@ -51,6 +51,7 @@ export const metadata: Metadata = {
       "A modern, nurturing school where children from playgroup to Class 5 explore, imagine, and grow.",
   },
   robots: { index: true, follow: true },
+  icons: { icon: "/images/logo.png", apple: "/images/logo.png" },
 };
 
 export default function RootLayout({

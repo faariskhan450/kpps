@@ -1,66 +1,71 @@
 import type { Metadata } from "next";
 import { Phone } from "lucide-react";
 import { siteConfig } from "@/lib/site";
-import { Reveal } from "@/components/animations";
+import { Reveal, Stagger, Item } from "@/components/animations";
+import { PageHero } from "@/components/page-hero";
+import { WaveDivider } from "@/components/wave-divider";
 import { EnquiryForm } from "@/components/enquiry-form";
 
 export const metadata: Metadata = {
-  title: "Admissions — Kids Planet School",
+  title: "Admissions",
   description: "Admissions information and enquiry for Kids Planet School.",
 };
 
 const steps = [
-  { no: "01", title: "Enquire", desc: "Fill the form below with a few details about your child." },
-  { no: "02", title: "Visit", desc: "Tour our campus and meet our caring team of educators." },
-  { no: "03", title: "Enrol", desc: "Complete the simple paperwork and welcome to the family." },
+  { no: "1", title: "Enquire", desc: "Fill the form below with a few details about your child.", fill: "bg-teal" },
+  { no: "2", title: "Visit", desc: "Tour our campus and meet our caring team of educators.", fill: "bg-amber-400" },
+  { no: "3", title: "Enrol", desc: "Complete the simple paperwork — welcome to the family!", fill: "bg-rose-400" },
 ];
 
 export default function AdmissionsPage() {
   return (
-    <div className="mx-auto max-w-6xl px-5 pt-20 sm:px-8 sm:pt-28">
-      <Reveal className="max-w-3xl">
-        <p className="font-sans text-sm font-semibold uppercase tracking-widest text-teal">
-          Admissions 2026–27
-        </p>
-        <h1 className="mt-3 font-display text-5xl font-semibold leading-[1.05] tracking-tight text-ink sm:text-6xl">
-          Start your child&apos;s journey with us
-        </h1>
-        <p className="mt-6 font-sans text-lg leading-relaxed text-ink/65">
-          Admissions for the 2026–27 session are open. Send us an enquiry below
-          and our team will be in touch. Prefer to talk? Call us at{" "}
+    <>
+      <PageHero
+        eyebrow="Admissions 2026–27"
+        title="Start your child's journey with us"
+        subtitle="Admissions for the 2026–27 session are open. Send an enquiry below, or call us anytime."
+      />
+
+      {/* Steps */}
+      <section className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
+        <Stagger className="grid gap-10 sm:grid-cols-3">
+          {steps.map(({ no, title, desc, fill }) => (
+            <Item key={no} className="text-center">
+              <div className={`blob-alt mx-auto flex h-20 w-20 items-center justify-center ${fill} font-display text-3xl font-bold text-white`}>
+                {no}
+              </div>
+              <h2 className="mt-5 font-display text-xl font-bold text-deep">{title}</h2>
+              <p className="mx-auto mt-2 max-w-xs font-sans text-sm text-ink/60">{desc}</p>
+            </Item>
+          ))}
+        </Stagger>
+        <div className="mt-10 text-center">
           <a
             href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
-            className="font-semibold text-deep underline-offset-2 hover:underline"
+            className="inline-flex items-center gap-2 rounded-full bg-deep px-7 py-3.5 font-sans text-sm font-bold text-surface transition-colors hover:bg-teal"
           >
-            {siteConfig.phone}
+            <Phone size={16} /> Call {siteConfig.phone}
           </a>
-          .
-        </p>
-      </Reveal>
-
-      {/* How it works */}
-      <div className="mt-16 grid gap-6 md:grid-cols-3">
-        {steps.map((step, i) => (
-          <Reveal key={step.no} delay={i * 0.1}>
-            <div className="h-full rounded-3xl bg-surface p-8 shadow-[0_10px_40px_rgba(19,48,41,0.05)]">
-              <span className="font-display text-4xl font-semibold text-mint">{step.no}</span>
-              <h2 className="mt-4 font-display text-xl font-semibold text-ink">{step.title}</h2>
-              <p className="mt-2 font-sans text-sm leading-relaxed text-ink/60">{step.desc}</p>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-
-      {/* Enquiry form */}
-      <Reveal className="mx-auto mt-16 max-w-3xl">
-        <div className="mb-6 flex items-center gap-2 text-teal">
-          <Phone size={18} />
-          <span className="font-sans text-sm font-semibold uppercase tracking-widest">
-            Enquiry form
-          </span>
         </div>
-        <EnquiryForm />
-      </Reveal>
-    </div>
+      </section>
+
+      {/* Enquiry form on a pale band */}
+      <section className="relative bg-wash pb-32 pt-28">
+        <WaveDivider flip className="absolute inset-x-0 top-0 h-14 text-canvas sm:h-20" />
+        <div className="relative z-10 mx-auto max-w-3xl px-5 sm:px-8">
+          <Reveal className="text-center">
+            <h2 className="font-display text-3xl font-bold tracking-tight text-deep sm:text-4xl">
+              Send an enquiry
+            </h2>
+            <p className="mt-3 font-sans text-ink/65">
+              We&apos;ll get back to you as soon as we can.
+            </p>
+          </Reveal>
+          <div className="mt-8">
+            <EnquiryForm />
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

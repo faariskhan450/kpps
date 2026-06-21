@@ -74,3 +74,22 @@ Work top to bottom. Each phase leaves you with something working.
 - [ ] 9.1 Razorpay integration (test mode first)
 - [ ] 9.2 Admin-managed events & gallery uploads via Supabase Storage
   - _Requirements: 5, 7_
+
+
+## Tier 1 — Advanced features (post-Phase 8)
+- [x] T1.1 Admin analytics dashboard — stat cards + charts (recharts)
+- [x] T1.2 Notices/Announcements — admin posts; teachers & students see on dashboards
+- [x] T1.3 Admin-managed Events & Gallery + image uploads (Supabase Storage bucket "media")
+- [x] T1.4 Search + pagination on admin lists (students, teachers, enquiries) + confirm-before-delete dialogs
+  - _New SQL: supabase/sql/05_advanced.sql (notices, events, gallery tables, storage bucket, seed data)._
+  - _Public Events & Gallery now read from the database (were hardcoded)._
+  - _Pending user step: run 05_advanced.sql; service-role key already set in Phase 6._
+
+
+## Tier 2 — Academics
+- [x] T2.1 Homework — teachers assign per class; students view (/teacher/homework, /student/homework)
+- [x] T2.2 Attendance reports — class summary + CSV export (/teacher/reports, /teacher/reports/export)
+- [x] T2.3 Marks / report cards — teachers enter; students view by term (/teacher/marks, /student/marks)
+- [x] T2.4 Timetable — teachers set; students view weekly grid (/teacher/timetable, /student/timetable)
+  - _New SQL: supabase/sql/06_academics.sql (homework, marks, timetable tables + RLS)._
+  - _Pending user step: run 06_academics.sql._

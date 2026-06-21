@@ -1,83 +1,79 @@
 import type { Metadata } from "next";
-import { Music, Trophy, Palette, PartyPopper, type LucideIcon } from "lucide-react";
-import { events, type EventCategory } from "@/data/events";
-import { Reveal, Stagger, Item } from "@/components/animations";
+import Image from "next/image";
+import { Music, Trophy, Palette, PartyPopper, CalendarDays, type LucideIcon } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import { Stagger, Item } from "@/components/animations";
+import { PageHero } from "@/components/page-hero";
 
 export const metadata: Metadata = {
-  title: "Events — Kids Planet School",
+  title: "Events",
   description: "Upcoming events and celebrations at Kids Planet School.",
 };
 
-// Map each category to a clean icon
-const categoryIcon: Record<EventCategory, LucideIcon> = {
-  performance: Music,
-  sports: Trophy,
-  arts: Palette,
-  celebration: PartyPopper,
+const categoryIcon: Record<string, LucideIcon> = {
+  performance: Music, sports: Trophy, arts: Palette, celebration: PartyPopper,
 };
+const blobFills = ["bg-teal", "bg-amber-400", "bg-rose-400", "bg-sky-400"];
 
-// "2026-07-15" -> { day: "15", month: "Jul", year: "2026" }
-function formatDate(iso: string) {
+function formatDate(iso: string | null) {
+  if (!iso) return { day: "--", month: "" };
   const d = new Date(iso);
   return {
     day: d.toLocaleDateString("en-IN", { day: "2-digit" }),
     month: d.toLocaleDateString("en-IN", { month: "short" }),
-    year: d.toLocaleDateString("en-IN", { year: "numeric" }),
   };
 }
 
-export default function EventsPage() {
-  const sorted = [...events].sort((a, b) => a.date.localeCompare(b.date));
+export default async function EventsPage() {
+  const supabase = await createClient();
+  const { data: events } = await supabase
+    .from("events")
+    .select("id, title, event_date, description, category, image_url")
+    .order("event_date", { ascending: true });
 
   return (
-    <div className="mx-auto max-w-6xl px-5 pt-20 sm:px-8 sm:pt-28">
-      <Reveal className="max-w-3xl">
-        <p className="font-sans text-sm font-semibold uppercase tracking-widest text-teal">
-          What&apos;s on
-        </p>
-        <h1 className="mt-3 font-display text-5xl font-semibold leading-[1.05] tracking-tight text-ink sm:text-6xl">
-          School events &amp; celebrations
-        </h1>
-        <p className="mt-6 font-sans text-lg leading-relaxed text-ink/65">
-          From annual day to sports day, there&apos;s always something exciting
-          happening at Kids Planet School.
-        </p>
-      </Reveal>
+    <>
+      <PageHero
+        eyebrow="What's on"
+        title="Events & celebrations"
+        subtitle="From annual day to sports day, there's always something joyful happening at Kids Planet."
+      />
 
-      <Stagger className="mt-14 grid gap-6 sm:grid-cols-2">
-        {sorted.map((event) => {
-          const Icon = categoryIcon[event.category];
-          const { day, month, year } = formatDate(event.date);
-          return (
-            <Item
-              key={event.id}
-              className="group flex gap-6 rounded-3xl bg-surface p-7 shadow-[0_10px_40px_rgba(19,48,41,0.05)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(19,48,41,0.1)]"
-            >
-              {/* Date block */}
-              <div className="flex h-20 w-20 flex-shrink-0 flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-teal to-deep text-surface">
-                <span className="font-display text-2xl font-semibold leading-none">{day}</span>
-                <span className="font-sans text-xs font-medium uppercase tracking-wide">{month}</span>
-                <span className="font-sans text-[10px] text-surface/70">{year}</span>
-              </div>
-
-              <div>
-                <div className="flex items-center gap-2 text-teal">
-                  <Icon size={16} />
-                  <span className="font-sans text-xs font-semibold uppercase tracking-wide capitalize">
-                    {event.category}
-                  </span>
-                </div>
-                <h2 className="mt-1.5 font-display text-xl font-semibold text-ink">
-                  {event.title}
-                </h2>
-                <p className="mt-2 font-sans text-sm leading-relaxed text-ink/60">
-                  {event.description}
-                </p>
-              </div>
-            </Item>
-          );
-        })}
-      </Stagger>
-    </div>
+      <section className="mx-auto max-w-5xl px-5 py-12 sm:px-8 sm:py-16">
+        {(events ?? []).length === 0 ? (
+          <p className="text-center font-sans text-ink/60">No events scheduled right now. Check back soon!</p>
+        ) : (
+          <Stagger className="space-y-10">
+            {(events ?? []).map((event, i) => {
+              const Icon = categoryIcon[event.category ?? ""] ?? CalendarDays;
+              const { day, month } = formatDate(event.event_date);
+              return (
+                <Item key={event.id} className="flex flex-col items-center gap-6 sm:flex-row sm:items-center">
+                  <div className={`blob flex h-24 w-24 flex-shrink-0 flex-col items-center justify-center ${blobFills[i % blobFills.length]} text-white`}>
+                    <span className="font-display text-3xl font-bold leading-none">{day}</span>
+                    <span className="font-sans text-xs font-bold uppercase">{month}</span>
+                  </div>
+                  {event.image_url && (
+                    <div className="blob-alt relative h-28 w-28 flex-shrink-0 overflow-hidden">
+                      <Image src={event.image_url} alt={event.title} fill sizes="112px" className="object-cover" />
+                    </div>
+                  )}
+                  <div className="text-center sm:text-left">
+                    {event.category && (
+                      <div className="flex items-center justify-center gap-2 text-teal sm:justify-start">
+                        <Icon size={16} />
+                        <span className="font-sans text-xs font-bold uppercase tracking-wide capitalize">{event.category}</span>
+                      </div>
+                    )}
+                    <h2 className="mt-1 font-display text-2xl font-bold text-deep">{event.title}</h2>
+                    {event.description && <p className="mt-2 font-sans text-ink/65">{event.description}</p>}
+                  </div>
+                </Item>
+              );
+            })}
+          </Stagger>
+        )}
+      </section>
+    </>
   );
 }

@@ -1,80 +1,65 @@
 import type { Metadata } from "next";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { siteConfig } from "@/lib/site";
-import { Reveal } from "@/components/animations";
+import { Reveal, Stagger, Item } from "@/components/animations";
+import { PageHero } from "@/components/page-hero";
 
 export const metadata: Metadata = {
-  title: "Contact — Kids Planet School",
+  title: "Contact",
   description: "Get in touch with Kids Planet School — address, phone, and email.",
 };
 
 export default function ContactPage() {
-  // Keyless Google Maps embed using the address from our site config
-  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(
-    siteConfig.mapQuery
-  )}&output=embed`;
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(siteConfig.mapQuery)}&output=embed`;
 
   const details = [
-    { Icon: MapPin, label: "Address", value: siteConfig.address, href: undefined },
-    { Icon: Phone, label: "Phone", value: siteConfig.phone, href: `tel:${siteConfig.phone.replace(/\s/g, "")}` },
-    { Icon: Mail, label: "Email", value: siteConfig.email, href: `mailto:${siteConfig.email}` },
+    { Icon: MapPin, label: "Address", value: siteConfig.address, href: undefined, fill: "bg-teal" },
+    { Icon: Phone, label: "Phone", value: siteConfig.phone, href: `tel:${siteConfig.phone.replace(/\s/g, "")}`, fill: "bg-amber-400" },
+    { Icon: Mail, label: "Email", value: siteConfig.email, href: `mailto:${siteConfig.email}`, fill: "bg-rose-400" },
   ];
 
   return (
-    <div className="mx-auto max-w-6xl px-5 pt-20 sm:px-8 sm:pt-28">
-      <Reveal className="max-w-3xl">
-        <p className="font-sans text-sm font-semibold uppercase tracking-widest text-teal">
-          Contact
-        </p>
-        <h1 className="mt-3 font-display text-5xl font-semibold leading-[1.05] tracking-tight text-ink sm:text-6xl">
-          We&apos;d love to hear from you
-        </h1>
-        <p className="mt-6 font-sans text-lg leading-relaxed text-ink/65">
-          Visit us, call, or drop an email — and do say hello. Our doors are
-          always open to families.
-        </p>
-      </Reveal>
+    <>
+      <PageHero
+        eyebrow="Contact"
+        title="We'd love to hear from you"
+        subtitle="Visit us, call, or drop an email — our doors are always open to families."
+      />
 
-      <div className="mt-14 grid gap-8 lg:grid-cols-2">
-        {/* Details */}
-        <div className="space-y-5">
-          {details.map(({ Icon, label, value, href }) => (
-            <Reveal key={label}>
-              <div className="flex gap-5 rounded-3xl bg-surface p-6 shadow-[0_10px_40px_rgba(19,48,41,0.05)]">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-mint/25 text-deep">
-                  <Icon size={22} />
-                </div>
-                <div>
-                  <h2 className="font-display text-lg font-semibold text-ink">{label}</h2>
-                  {href ? (
-                    <a
-                      href={href}
-                      className="mt-1 block font-sans text-sm text-ink/65 transition-colors hover:text-deep"
-                    >
-                      {value}
-                    </a>
-                  ) : (
-                    <p className="mt-1 font-sans text-sm text-ink/65">{value}</p>
-                  )}
-                </div>
+      <section className="mx-auto grid max-w-6xl gap-14 px-5 py-12 sm:px-8 sm:py-16 lg:grid-cols-2 lg:items-center">
+        <Stagger className="space-y-8">
+          {details.map(({ Icon, label, value, href, fill }) => (
+            <Item key={label} className="flex items-center gap-5">
+              <div className={`blob flex h-16 w-16 flex-shrink-0 items-center justify-center ${fill} text-white`}>
+                <Icon size={26} />
               </div>
-            </Reveal>
+              <div>
+                <h2 className="font-display text-lg font-bold text-deep">{label}</h2>
+                {href ? (
+                  <a href={href} className="mt-1 block font-sans text-ink/70 transition-colors hover:text-teal">{value}</a>
+                ) : (
+                  <p className="mt-1 font-sans text-ink/70">{value}</p>
+                )}
+              </div>
+            </Item>
           ))}
-        </div>
+        </Stagger>
 
-        {/* Map */}
         <Reveal delay={0.1}>
-          <div className="h-full overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(19,48,41,0.05)]">
-            <iframe
-              title="School location map"
-              src={mapSrc}
-              className="h-full min-h-[340px] w-full"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+          <div className="relative mx-auto aspect-square w-full max-w-md">
+            <div className="blob-alt absolute -inset-3 bg-mint/50" />
+            <div className="blob relative h-full w-full overflow-hidden">
+              <iframe
+                title="School location map"
+                src={mapSrc}
+                className="h-full w-full"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
           </div>
         </Reveal>
-      </div>
-    </div>
+      </section>
+    </>
   );
 }
